@@ -1,0 +1,127 @@
+Traceback (most recent call last):
+  File "/usr/local/python/3.12.1/lib/python3.12/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
+    executenb(
+  File "/home/codespace/.local/lib/python3.12/site-packages/nbclient/client.py", line 1319, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/codespace/.local/lib/python3.12/site-packages/jupyter_core/utils/__init__.py", line 165, in wrapped
+    return loop.run_until_complete(inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/python/3.12.1/lib/python3.12/asyncio/base_events.py", line 684, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/codespace/.local/lib/python3.12/site-packages/nbclient/client.py", line 709, in async_execute
+    await self.async_execute_cell(
+  File "/home/codespace/.local/lib/python3.12/site-packages/nbclient/client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/home/codespace/.local/lib/python3.12/site-packages/nbclient/client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+# Import library
+import librosa
+import pandas as pd
+import numpy as np
+import os
+from scipy.stats import skew, kurtosis
+
+# --- Fungsi Ekstraksi (Tidak berubah) ---
+def ekstrak_fitur(file_audio):
+    """
+    Memuat file audio dan mengekstrak fitur statistik time series.
+    """
+    try:
+        y, sr = librosa.load(file_audio, sr=None)
+        y, _ = librosa.effects.trim(y, top_db=20)
+
+        # Fitur Statistik
+        zcr_mean = np.mean(librosa.feature.zero_crossing_rate(y))
+        zcr_std = np.std(librosa.feature.zero_crossing_rate(y))
+        rms_mean = np.mean(librosa.feature.rms(y=y))
+        rms_std = np.std(librosa.feature.rms(y=y))
+        amp_mean = np.mean(y)
+        amp_std = np.std(y)
+        amp_var = np.var(y)
+        amp_skew = skew(y)
+        amp_kurtosis = kurtosis(y)
+        amp_min = np.min(y)
+        amp_max = np.max(y)
+
+        return [
+            zcr_mean, zcr_std, rms_mean, rms_std,
+            amp_mean, amp_std, amp_var, amp_skew,
+            amp_kurtosis, amp_min, amp_max
+        ]
+
+    except Exception as e:
+        print(f"Error memproses {file_audio}: {e}")
+        return None
+
+# --- Program Utama (Path Sudah Disesuaikan) ---
+
+# Path untuk MEMBACA audio (tetap sama)
+base_path = '/workspaces/PSD/psd/voice'
+folder_buka = os.path.join(base_path, 'buka')
+folder_tutup = os.path.join(base_path, 'tutup')
+
+# Path untuk MENYIMPAN CSV (diubah sesuai permintaan Anda)
+output_file = '/workspaces/PSD/psd/voice/fitur_audio.csv'
+
+daftar_fitur = []
+nama_kolom = [
+    'zcr_mean', 'zcr_std', 'rms_mean', 'rms_std',
+    'amp_mean', 'amp_std', 'amp_var', 'amp_skew',
+    'amp_kurtosis', 'amp_min', 'amp_max', 'label'
+]
+
+print("Mulai memproses folder 'buka'...")
+for file_name in os.listdir(folder_buka):
+    file_path = os.path.join(folder_buka, file_name)
+    if file_path.endswith(('.wav', '.mp3')):
+        fitur = ekstrak_fitur(file_path)
+        if fitur:
+            fitur.append('buka')
+            daftar_fitur.append(fitur)
+
+print("Mulai memproses folder 'tutup'...")
+for file_name in os.listdir(folder_tutup):
+    file_path = os.path.join(folder_tutup, file_name)
+    if file_path.endswith(('.wav', '.mp3')):
+        fitur = ekstrak_fitur(file_path)
+        if fitur:
+            fitur.append('tutup')
+            daftar_fitur.append(fitur)
+
+# Buat DataFrame dan Simpan ke CSV di Google Drive
+df_fitur = pd.DataFrame(daftar_fitur, columns=nama_kolom)
+df_fitur.to_csv(output_file, index=False)
+
+print("\n--- Selesai! ---")
+print(f"Berhasil memproses {len(df_fitur)} file audio.")
+# Menampilkan lokasi penyimpanan yang baru
+print(f"File 'fitur_audio.csv' telah disimpan di: {output_file}")
+
+# Tampilkan 5 baris pertama data Anda
+print("\nContoh 5 baris pertama data Anda:")
+print(df_fitur.head())
+------------------
+
+----- stdout -----
+Mulai memproses folder 'buka'...
+------------------
+
+[31m---------------------------------------------------------------------------[39m
+[31mFileNotFoundError[39m                         Traceback (most recent call last)
+[36mCell[39m[36m [39m[32mIn[2][39m[32m, line 58[39m
+[32m     51[39m nama_kolom = [
+[32m     52[39m     [33m'[39m[33mzcr_mean[39m[33m'[39m, [33m'[39m[33mzcr_std[39m[33m'[39m, [33m'[39m[33mrms_mean[39m[33m'[39m, [33m'[39m[33mrms_std[39m[33m'[39m,
+[32m     53[39m     [33m'[39m[33mamp_mean[39m[33m'[39m, [33m'[39m[33mamp_std[39m[33m'[39m, [33m'[39m[33mamp_var[39m[33m'[39m, [33m'[39m[33mamp_skew[39m[33m'[39m,
+[32m     54[39m     [33m'[39m[33mamp_kurtosis[39m[33m'[39m, [33m'[39m[33mamp_min[39m[33m'[39m, [33m'[39m[33mamp_max[39m[33m'[39m, [33m'[39m[33mlabel[39m[33m'[39m
+[32m     55[39m ]
+[32m     57[39m [38;5;28mprint[39m([33m"[39m[33mMulai memproses folder [39m[33m'[39m[33mbuka[39m[33m'[39m[33m...[39m[33m"[39m)
+[32m---> [39m[32m58[39m [38;5;28;01mfor[39;00m file_name [38;5;129;01min[39;00m [43mos[49m[43m.[49m[43mlistdir[49m[43m([49m[43mfolder_buka[49m[43m)[49m:
+[32m     59[39m     file_path = os.path.join(folder_buka, file_name)
+[32m     60[39m     [38;5;28;01mif[39;00m file_path.endswith(([33m'[39m[33m.wav[39m[33m'[39m, [33m'[39m[33m.mp3[39m[33m'[39m)):
+
+[31mFileNotFoundError[39m: [Errno 2] No such file or directory: '/workspaces/PSD/psd/voice/buka'
+
