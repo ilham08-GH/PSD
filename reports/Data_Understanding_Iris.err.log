@@ -63,16 +63,16 @@ print(df_postgres.head())
 
 [31m---------------------------------------------------------------------------[39m
 [31mModuleNotFoundError[39m                       Traceback (most recent call last)
-[36mCell[39m[36m [39m[32mIn[1][39m[32m, line 19[39m
-[32m     16[39m PG_DATABASE = [33m"[39m[33mdefaultdb[39m[33m"[39m
-[32m     18[39m [38;5;66;03m# Gunakan SQLAlchemy untuk koneksi ke MySQL[39;00m
-[32m---> [39m[32m19[39m mysql_engine = [43mcreate_engine[49m[43m([49m
-[32m     20[39m [43m    [49m[33;43mf[39;49m[33;43m"[39;49m[33;43mmysql+pymysql://[39;49m[38;5;132;43;01m{[39;49;00m[43mMYSQL_USER[49m[38;5;132;43;01m}[39;49;00m[33;43m:[39;49m[38;5;132;43;01m{[39;49;00m[43mMYSQL_PASSWORD[49m[38;5;132;43;01m}[39;49;00m[33;43m@[39;49m[38;5;132;43;01m{[39;49;00m[43mMYSQL_HOST[49m[38;5;132;43;01m}[39;49;00m[33;43m:[39;49m[38;5;132;43;01m{[39;49;00m[43mMYSQL_PORT[49m[38;5;132;43;01m}[39;49;00m[33;43m/[39;49m[38;5;132;43;01m{[39;49;00m[43mMYSQL_DATABASE[49m[38;5;132;43;01m}[39;49;00m[33;43m"[39;49m
-[32m     21[39m [43m)[49m
+[36mCell[39m[36m [39m[32mIn[1][39m[32m, line 24[39m
+[32m     19[39m mysql_engine = create_engine(
+[32m     20[39m     [33mf[39m[33m"[39m[33mmysql+pymysql://[39m[38;5;132;01m{[39;00mMYSQL_USER[38;5;132;01m}[39;00m[33m:[39m[38;5;132;01m{[39;00mMYSQL_PASSWORD[38;5;132;01m}[39;00m[33m@[39m[38;5;132;01m{[39;00mMYSQL_HOST[38;5;132;01m}[39;00m[33m:[39m[38;5;132;01m{[39;00mMYSQL_PORT[38;5;132;01m}[39;00m[33m/[39m[38;5;132;01m{[39;00mMYSQL_DATABASE[38;5;132;01m}[39;00m[33m"[39m
+[32m     21[39m )
 [32m     23[39m [38;5;66;03m# Gunakan SQLAlchemy untuk koneksi ke PostgreSQL[39;00m
-[32m     24[39m pg_engine = create_engine(
-[32m     25[39m     [33mf[39m[33m"[39m[33mpostgresql+psycopg2://[39m[38;5;132;01m{[39;00mPG_USER[38;5;132;01m}[39;00m[33m:[39m[38;5;132;01m{[39;00mPG_PASSWORD[38;5;132;01m}[39;00m[33m@[39m[38;5;132;01m{[39;00mPG_HOST[38;5;132;01m}[39;00m[33m:[39m[38;5;132;01m{[39;00mPG_PORT[38;5;132;01m}[39;00m[33m/[39m[38;5;132;01m{[39;00mPG_DATABASE[38;5;132;01m}[39;00m[33m"[39m
-[32m     26[39m )
+[32m---> [39m[32m24[39m pg_engine = [43mcreate_engine[49m[43m([49m
+[32m     25[39m [43m    [49m[33;43mf[39;49m[33;43m"[39;49m[33;43mpostgresql+psycopg2://[39;49m[38;5;132;43;01m{[39;49;00m[43mPG_USER[49m[38;5;132;43;01m}[39;49;00m[33;43m:[39;49m[38;5;132;43;01m{[39;49;00m[43mPG_PASSWORD[49m[38;5;132;43;01m}[39;49;00m[33;43m@[39;49m[38;5;132;43;01m{[39;49;00m[43mPG_HOST[49m[38;5;132;43;01m}[39;49;00m[33;43m:[39;49m[38;5;132;43;01m{[39;49;00m[43mPG_PORT[49m[38;5;132;43;01m}[39;49;00m[33;43m/[39;49m[38;5;132;43;01m{[39;49;00m[43mPG_DATABASE[49m[38;5;132;43;01m}[39;49;00m[33;43m"[39;49m
+[32m     26[39m [43m)[49m
+[32m     28[39m [38;5;66;03m# Jalankan query[39;00m
+[32m     29[39m mysql_query = [33m"[39m[33mSELECT * FROM iris_data;[39m[33m"[39m
 
 [36mFile [39m[32m<string>:2[39m, in [36mcreate_engine[39m[34m(url, **kwargs)[39m
 
@@ -93,10 +93,11 @@ print(df_postgres.head())
 [32m    619[39m dialect_args[[33m"[39m[33mdbapi[39m[33m"[39m] = dbapi
 [32m    621[39m dialect_args.setdefault([33m"[39m[33mcompiler_linting[39m[33m"[39m, compiler.NO_LINTING)
 
-[36mFile [39m[32m/usr/local/python/3.12.1/lib/python3.12/site-packages/sqlalchemy/dialects/mysql/pymysql.py:89[39m, in [36mMySQLDialect_pymysql.import_dbapi[39m[34m(cls)[39m
-[32m     87[39m [38;5;129m@classmethod[39m
-[32m     88[39m [38;5;28;01mdef[39;00m[38;5;250m [39m[34mimport_dbapi[39m([38;5;28mcls[39m) -> DBAPIModule:
-[32m---> [39m[32m89[39m     [38;5;28;01mreturn[39;00m [38;5;28;43m__import__[39;49m[43m([49m[33;43m"[39;49m[33;43mpymysql[39;49m[33;43m"[39;49m[43m)[49m
+[36mFile [39m[32m/usr/local/python/3.12.1/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/psycopg2.py:696[39m, in [36mPGDialect_psycopg2.import_dbapi[39m[34m(cls)[39m
+[32m    694[39m [38;5;129m@classmethod[39m
+[32m    695[39m [38;5;28;01mdef[39;00m[38;5;250m [39m[34mimport_dbapi[39m([38;5;28mcls[39m):
+[32m--> [39m[32m696[39m     [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01mpsycopg2[39;00m
+[32m    698[39m     [38;5;28;01mreturn[39;00m psycopg2
 
-[31mModuleNotFoundError[39m: No module named 'pymysql'
+[31mModuleNotFoundError[39m: No module named 'psycopg2'
 
